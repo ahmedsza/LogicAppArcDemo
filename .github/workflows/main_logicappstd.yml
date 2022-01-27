@@ -15,24 +15,13 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v2
 
-      - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: 'Resolve Project Dependencies Using Npm'
-        shell: pwsh
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-          popd
+      - name: Package logic
+        run: (mkdir output; cp host.json ./output; cp *WF/ ./output -r;mkdir final; cd output; zip -r ../final/logic.zip .)
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -40,5 +29,5 @@ jobs:
         with:
           app-name: 'logicappstd'
           slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: '${{ github.workspace }}/final/logic.zip'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_30E090290B54449280FE24BF1AE327AF }}
