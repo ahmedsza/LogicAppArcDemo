@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Package logic
-        run: (mkdir output; cp host.json ./output; cp Artifacts/ ./output; cp *WF/ ./output -r;mkdir final; cd output; zip -r ../final/logic.zip .)
+        run: (mkdir output; cp host.json ./output; cp Artifacts/ ./output -r; cp *WF/ ./output -r;mkdir final; cd output; zip -r ../final/logic.zip .)
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
