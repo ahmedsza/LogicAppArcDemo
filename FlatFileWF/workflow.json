@@ -1,0 +1,40 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Flat_File_Decoding": {
+                "type": "FlatFileDecoding",
+                "inputs": {
+                    "content": "@triggerBody()",
+                    "schema": {
+                        "name": "demo.xsd"
+                    }
+                },
+                "runAfter": {}
+            },
+            "Response": {
+                "type": "Response",
+                "kind": "http",
+                "inputs": {
+                    "statusCode": 200,
+                    "body": "@body('Flat_File_Decoding')"
+                },
+                "runAfter": {
+                    "Flat_File_Decoding": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "triggers": {
+            "manual": {
+                "type": "Request",
+                "kind": "Http",
+                "inputs": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {}
+    },
+    "kind": "Stateful"
+}
